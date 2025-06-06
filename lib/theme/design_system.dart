@@ -31,8 +31,12 @@ class DesignSystem {
   // Device Card Colors
   static const Color deviceCardActive = Color(0xFF2C3E50); // Lighter blue
   static const Color deviceCardInactive = Color(0x1AE2E2E2); // 10% off-white
-  static const Color deviceIconActive =
-      Color.fromARGB(255, 99, 234, 255); // Sky blue
+  static const Color deviceIconActive = Color.fromARGB(
+    255,
+    99,
+    234,
+    255,
+  ); // Sky blue
   static const Color deviceIconInactive = Color(0x80E2E2E2); // 50% off-white
 
   // Gradients
@@ -65,82 +69,73 @@ class DesignSystem {
 
   // Typography
   static TextTheme get textTheme => TextTheme(
-        displayLarge: GoogleFonts.poppins(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-        ),
-        displayMedium: GoogleFonts.poppins(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-        ),
-        displaySmall: GoogleFonts.poppins(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: textPrimary,
-        ),
-        headlineLarge: GoogleFonts.poppins(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          color: textPrimary,
-        ),
-        headlineMedium: GoogleFonts.poppins(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: textPrimary,
-        ),
-        headlineSmall: GoogleFonts.poppins(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: textPrimary,
-        ),
-        titleLarge: GoogleFonts.inter(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: textPrimary,
-        ),
-        titleMedium: GoogleFonts.inter(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: textPrimary,
-        ),
-        titleSmall: GoogleFonts.inter(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: textPrimary,
-        ),
-        bodyLarge: GoogleFonts.roboto(
-          fontSize: 16,
-          color: textPrimary,
-        ),
-        bodyMedium: GoogleFonts.roboto(
-          fontSize: 14,
-          color: textPrimary,
-        ),
-        bodySmall: GoogleFonts.roboto(
-          fontSize: 12,
-          color: textPrimary,
-        ),
-        labelLarge: GoogleFonts.roboto(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.1,
-          color: textPrimary,
-        ),
-        labelMedium: GoogleFonts.roboto(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.5,
-          color: textPrimary,
-        ),
-        labelSmall: GoogleFonts.roboto(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.5,
-          color: textPrimary,
-        ),
-      );
+    displayLarge: GoogleFonts.poppins(
+      fontSize: 32,
+      fontWeight: FontWeight.bold,
+      color: textPrimary,
+    ),
+    displayMedium: GoogleFonts.poppins(
+      fontSize: 28,
+      fontWeight: FontWeight.bold,
+      color: textPrimary,
+    ),
+    displaySmall: GoogleFonts.poppins(
+      fontSize: 24,
+      fontWeight: FontWeight.bold,
+      color: textPrimary,
+    ),
+    headlineLarge: GoogleFonts.poppins(
+      fontSize: 22,
+      fontWeight: FontWeight.w600,
+      color: textPrimary,
+    ),
+    headlineMedium: GoogleFonts.poppins(
+      fontSize: 20,
+      fontWeight: FontWeight.w600,
+      color: textPrimary,
+    ),
+    headlineSmall: GoogleFonts.poppins(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      color: textPrimary,
+    ),
+    titleLarge: GoogleFonts.inter(
+      fontSize: 16,
+      fontWeight: FontWeight.w600,
+      color: textPrimary,
+    ),
+    titleMedium: GoogleFonts.inter(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      color: textPrimary,
+    ),
+    titleSmall: GoogleFonts.inter(
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      color: textPrimary,
+    ),
+    bodyLarge: GoogleFonts.roboto(fontSize: 16, color: textPrimary),
+    bodyMedium: GoogleFonts.roboto(fontSize: 14, color: textPrimary),
+    bodySmall: GoogleFonts.roboto(fontSize: 12, color: textPrimary),
+    labelLarge: GoogleFonts.roboto(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.1,
+      color: textPrimary,
+    ),
+    labelMedium: GoogleFonts.roboto(
+      fontSize: 12,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.5,
+      color: textPrimary,
+    ),
+    labelSmall: GoogleFonts.roboto(
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+      letterSpacing: 0.5,
+      color: textPrimary,
+    ),
+  );
 
   // Spacing
   static const double spacing4 = 4.0;

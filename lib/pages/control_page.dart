@@ -47,16 +47,17 @@ class _ControlPageState extends State<ControlPage> {
             child: Text(
               "Control",
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
 
           // Search Bar
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: DesignSystem.spacing20),
+            padding: const EdgeInsets.symmetric(
+              horizontal: DesignSystem.spacing20,
+            ),
             child: Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: DesignSystem.spacing16,
@@ -69,10 +70,7 @@ class _ControlPageState extends State<ControlPage> {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.search_rounded,
-                    color: DesignSystem.primaryColor,
-                  ),
+                  Icon(Icons.search_rounded, color: DesignSystem.primaryColor),
                   const SizedBox(width: DesignSystem.spacing12),
                   Expanded(
                     child: TextField(
@@ -99,7 +97,8 @@ class _ControlPageState extends State<ControlPage> {
           Expanded(
             child: GridView.builder(
               padding: const EdgeInsets.symmetric(
-                  horizontal: DesignSystem.spacing20),
+                horizontal: DesignSystem.spacing20,
+              ),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: 1 / 1.3,
