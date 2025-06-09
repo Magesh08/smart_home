@@ -1,27 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../theme/design_system.dart';
 import '../util/smart_device_box.dart';
+import '../providers/smart_devices_provider.dart';
 
-class ControlPage extends StatefulWidget {
+class ControlPage extends ConsumerStatefulWidget {
   const ControlPage({super.key});
 
   @override
-  State<ControlPage> createState() => _ControlPageState();
+  ConsumerState<ControlPage> createState() => _ControlPageState();
 }
 
-class _ControlPageState extends State<ControlPage> {
+class _ControlPageState extends ConsumerState<ControlPage> {
   final TextEditingController _searchController = TextEditingController();
-
-  // List of smart devices
-  List mySmartDevices = [
-    // [smartDeviceName, iconPath, powerStatus]
-    ["Smart Light", "lib/icons/light-bulb.png", true],
-    ["Smart AC", "lib/icons/air-conditioner.png", false],
-    ["Smart TV", "lib/icons/smart-tv.png", false],
-    ["Smart Fan", "lib/icons/fan.png", false],
-    ["Smart Speaker", "lib/icons/speaker.png", false],
-    ["Smart Camera", "lib/icons/camera.png", false],
-  ];
 
   @override
   void dispose() {
@@ -29,64 +20,32 @@ class _ControlPageState extends State<ControlPage> {
     super.dispose();
   }
 
-  void powerSwitchChanged(bool value, int index) {
-    setState(() {
-      mySmartDevices[index][2] = value;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final smartDevices = ref.watch(smartDevicesProvider);
+
     return SafeArea(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
-          Padding(
-            padding: const EdgeInsets.all(DesignSystem.spacing20),
-            child: Text(
-              "Control",
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-
           // Search Bar
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: DesignSystem.spacing20,
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: DesignSystem.spacing16,
-                vertical: DesignSystem.spacing8,
-              ),
-              decoration: BoxDecoration(
-                gradient: DesignSystem.deviceCardGradient,
-                borderRadius: BorderRadius.circular(DesignSystem.radiusMedium),
-                boxShadow: DesignSystem.cardShadow,
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.search_rounded, color: DesignSystem.primaryColor),
-                  const SizedBox(width: DesignSystem.spacing12),
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                        hintText: "Search devices...",
-                        hintStyle: TextStyle(
-                          color: Colors.white.withOpacity(0.6),
-                        ),
-                        border: InputBorder.none,
-                      ),
-                      onChanged: (value) => setState(() {}),
-                    ),
-                  ),
-                ],
+            padding: const EdgeInsets.all(DesignSystem.spacing20),
+            child: TextField(
+              controller: _searchController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: "Search devices...",
+                hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.white.withOpacity(0.5),
+                ),
+                filled: true,
+                fillColor: DesignSystem.backgroundLight.withOpacity(0.3),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(DesignSystem.radiusLarge),
+                  borderSide: BorderSide.none,
+                ),
               ),
             ),
           ),
@@ -105,13 +64,16 @@ class _ControlPageState extends State<ControlPage> {
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
               ),
-              itemCount: mySmartDevices.length,
+              itemCount: smartDevices.length,
               itemBuilder: (context, index) {
+                final device = smartDevices[index];
                 return SmartDeviceBox(
-                  smartDeviceName: mySmartDevices[index][0],
-                  iconPath: mySmartDevices[index][1],
-                  powerOn: mySmartDevices[index][2],
-                  onChanged: (value) => powerSwitchChanged(value, index),
+                  smartDeviceName: device.name,
+                  iconPath: device.iconPath,
+                  powerOn: device.isOn,
+                  onChanged: (value) {
+                    ref.read(smartDevicesProvider.notifier).toggleDevice(index);
+                  },
                 );
               },
             ),

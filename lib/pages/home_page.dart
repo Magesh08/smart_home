@@ -1,31 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // import 'package:wifi_ip_details/wifi_ip_details.dart';
 import '../util/smart_device_box.dart';
 import '../theme/design_system.dart';
+import '../providers/smart_devices_provider.dart';
+import '../providers/home_stats_provider.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  ConsumerState<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HomePageState extends ConsumerState<HomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  // ignore: unused_field
   late Animation<double> _scaleAnimation;
-
-  // List of smart devices
-  List mySmartDevices = [
-    // [smartDeviceName, iconPath, powerStatus]
-    ["Smart Light", "lib/icons/light-bulb.png", true],
-    ["Smart AC", "lib/icons/air-conditioner.png", false],
-    ["Smart TV", "lib/icons/smart-tv.png", false],
-    ["Smart Fan", "lib/icons/fan.png", false],
-    ["Smart Speaker", "lib/icons/speaker.png", false],
-    ["Smart Camera", "lib/icons/camera.png", false],
-  ];
 
   @override
   void initState() {
@@ -44,13 +37,6 @@ class _HomePageState extends State<HomePage>
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  // Power button switched
-  void powerSwitchChanged(bool value, int index) {
-    setState(() {
-      mySmartDevices[index][2] = value;
-    });
   }
 
   // @override
@@ -110,92 +96,110 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    final smartDevices = ref.watch(smartDevicesProvider);
+    final homeStats = ref.watch(homeStatsProvider);
+    final activeDevices = smartDevices.where((device) => device.isOn).length;
+
     return SafeArea(
       child: Column(
         children: [
-          // Fixed Header Section
-          Padding(
+          // Header Section
+          Container(
             padding: const EdgeInsets.all(DesignSystem.spacing20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            decoration: BoxDecoration(
+              gradient: DesignSystem.deviceCardGradient,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(DesignSystem.radiusLarge),
+                bottomRight: Radius.circular(DesignSystem.radiusLarge),
+              ),
+            ),
+            child: Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "Welcome back!",
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.8),
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Welcome back!",
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(color: Colors.white.withOpacity(0.8)),
+                        ),
+                        const SizedBox(height: DesignSystem.spacing4),
+                        Text(
+                          "Magesh Varan",
+                          style: Theme.of(context).textTheme.headlineMedium
+                              ?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: DesignSystem.spacing4),
-                    Text(
-                      "Magesh Varan",
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    Container(
+                      padding: const EdgeInsets.all(DesignSystem.spacing8),
+                      decoration: BoxDecoration(
+                        color: DesignSystem.primaryColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(
+                          DesignSystem.radiusMedium,
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.notifications_outlined,
+                        color: DesignSystem.primaryColor,
+                        size: 28,
+                      ),
                     ),
                   ],
                 ),
-                Container(
-                  padding: const EdgeInsets.all(DesignSystem.spacing8),
-                  decoration: BoxDecoration(
-                    color: DesignSystem.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(
-                      DesignSystem.radiusMedium,
+                const SizedBox(height: DesignSystem.spacing20),
+                // Quick Stats Row
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: DesignSystem.spacing8,
                     ),
-                  ),
-                  child: Icon(
-                    Icons.notifications_outlined,
-                    color: DesignSystem.primaryColor,
-                    size: 28,
+                    child: Row(
+                      children: [
+                        _buildQuickStat(
+                          context,
+                          icon: Icons.power,
+                          value: "${activeDevices}/${smartDevices.length}",
+                          label: "Devices Active",
+                        ),
+                        const SizedBox(width: DesignSystem.spacing12),
+                        _buildQuickStat(
+                          context,
+                          icon: Icons.thermostat_outlined,
+                          value: "${homeStats.temperature}°C",
+                          label: "Temperature",
+                        ),
+                        const SizedBox(width: DesignSystem.spacing12),
+                        _buildQuickStat(
+                          context,
+                          icon: Icons.water_drop_outlined,
+                          value: "${homeStats.humidity}%",
+                          label: "Humidity",
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
           ),
 
-          // Scrollable Content
+          // Main Content
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Room Stats
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: DesignSystem.spacing20,
-                    ),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: _buildStatCard(
-                            context,
-                            icon: Icons.thermostat_outlined,
-                            title: "Temperature",
-                            value: "24°C",
-                            subtitle: "Comfortable",
-                          ),
-                        ),
-                        const SizedBox(width: DesignSystem.spacing16),
-                        Expanded(
-                          child: _buildStatCard(
-                            context,
-                            icon: Icons.air_outlined,
-                            title: "Air Quality",
-                            value: "Good",
-                            subtitle: "AQI 45",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
                   const SizedBox(height: DesignSystem.spacing20),
 
-                  // Power Usage
+                  // Power Usage Section
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: DesignSystem.spacing20,
@@ -207,33 +211,61 @@ class _HomePageState extends State<HomePage>
                         borderRadius: BorderRadius.circular(
                           DesignSystem.radiusLarge,
                         ),
+                        boxShadow: DesignSystem.cardShadow,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Power Usage",
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(color: Colors.white),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "Power Usage",
+                                style: Theme.of(context).textTheme.titleLarge
+                                    ?.copyWith(color: Colors.white),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: DesignSystem.spacing12,
+                                  vertical: DesignSystem.spacing4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(
+                                    DesignSystem.radiusMedium,
+                                  ),
+                                ),
+                                child: Text(
+                                  "Last 24h",
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        color: Colors.white.withOpacity(0.8),
+                                      ),
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: DesignSystem.spacing16),
+                          const SizedBox(height: DesignSystem.spacing20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               _buildPowerStat(
                                 context,
                                 title: "Current",
-                                value: "2.4 kW",
+                                value: "${homeStats.voltage}V",
+                                icon: Icons.power,
                               ),
                               _buildPowerStat(
                                 context,
-                                title: "Today",
-                                value: "18.2 kWh",
+                                title: "Usage",
+                                value: "${homeStats.powerUsage} kW",
+                                icon: Icons.electric_bolt,
                               ),
                               _buildPowerStat(
                                 context,
-                                title: "This Month",
-                                value: "245 kWh",
+                                title: "Status",
+                                value: homeStats.climate,
+                                icon: Icons.check_circle_outline,
                               ),
                             ],
                           ),
@@ -244,16 +276,38 @@ class _HomePageState extends State<HomePage>
 
                   const SizedBox(height: DesignSystem.spacing20),
 
-                  // Active Devices
+                  // Devices Section
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: DesignSystem.spacing20,
                     ),
-                    child: Text(
-                      "Active Devices",
-                      style: Theme.of(
-                        context,
-                      ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Smart Devices",
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleLarge?.copyWith(color: Colors.white),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: DesignSystem.spacing12,
+                            vertical: DesignSystem.spacing4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: DesignSystem.primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(
+                              DesignSystem.radiusMedium,
+                            ),
+                          ),
+                          child: Text(
+                            "$activeDevices Active",
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(color: DesignSystem.primaryColor),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
 
@@ -274,14 +328,18 @@ class _HomePageState extends State<HomePage>
                             crossAxisSpacing: 15,
                             mainAxisSpacing: 15,
                           ),
-                      itemCount: mySmartDevices.length,
+                      itemCount: smartDevices.length,
                       itemBuilder: (context, index) {
+                        final device = smartDevices[index];
                         return SmartDeviceBox(
-                          smartDeviceName: mySmartDevices[index][0],
-                          iconPath: mySmartDevices[index][1],
-                          powerOn: mySmartDevices[index][2],
-                          onChanged: (value) =>
-                              powerSwitchChanged(value, index),
+                          smartDeviceName: device.name,
+                          iconPath: device.iconPath,
+                          powerOn: device.isOn,
+                          onChanged: (value) {
+                            ref
+                                .read(smartDevicesProvider.notifier)
+                                .toggleDevice(index);
+                          },
                         );
                       },
                     ),
@@ -297,43 +355,44 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Widget _buildStatCard(
+  Widget _buildQuickStat(
     BuildContext context, {
     required IconData icon,
-    required String title,
     required String value,
-    required String subtitle,
+    required String label,
   }) {
     return Container(
-      padding: const EdgeInsets.all(DesignSystem.spacing16),
+      width: 100,
+      padding: const EdgeInsets.symmetric(
+        horizontal: DesignSystem.spacing12,
+        vertical: DesignSystem.spacing12,
+      ),
       decoration: BoxDecoration(
-        gradient: DesignSystem.deviceCardGradient,
-        borderRadius: BorderRadius.circular(DesignSystem.radiusLarge),
-        boxShadow: DesignSystem.cardShadow,
+        color: Colors.white.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(DesignSystem.radiusMedium),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: DesignSystem.primaryColor, size: 28),
-          const SizedBox(height: DesignSystem.spacing12),
+          Icon(icon, color: DesignSystem.primaryColor, size: 24),
+          const SizedBox(height: DesignSystem.spacing8),
           Text(
-            title,
+            value,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: DesignSystem.spacing4),
           Text(
-            value,
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(color: Colors.white),
-          ),
-          Text(
-            subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            label,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Colors.white.withOpacity(0.6),
             ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
@@ -344,22 +403,30 @@ class _HomePageState extends State<HomePage>
     BuildContext context, {
     required String title,
     required String value,
+    required IconData icon,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: Colors.white.withOpacity(0.8),
-          ),
+        Row(
+          children: [
+            Icon(icon, color: Colors.white.withOpacity(0.6), size: 16),
+            const SizedBox(width: DesignSystem.spacing4),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.white.withOpacity(0.6),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: DesignSystem.spacing4),
         Text(
           value,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(color: Colors.white),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );
