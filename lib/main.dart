@@ -20,8 +20,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.dark(
-          primary: DesignSystem.primaryColor,
-          secondary: DesignSystem.secondaryColor,
+          primary: DesignSystem.backgroundDark, // Using your DesignSystem
+          secondary: DesignSystem.backgroundLight,
           surface: DesignSystem.backgroundLight,
           background: DesignSystem.backgroundDark,
           error: DesignSystem.errorColor,
@@ -47,10 +47,11 @@ class MainScreen extends ConsumerStatefulWidget {
 class _MainScreenState extends ConsumerState<MainScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomePage(),
-    const ControlPage(),
-    const AccountPage(),
+  // Keep the list of pages. This is perfect.
+  static const List<Widget> _pages = <Widget>[
+    HomeScreen(),
+    ControlPage(),
+    AccountPage(),
   ];
 
   @override
@@ -60,7 +61,9 @@ class _MainScreenState extends ConsumerState<MainScreen> {
         decoration: const BoxDecoration(
           gradient: DesignSystem.backgroundGradient,
         ),
-        child: _pages[_selectedIndex],
+        // 1. USE AN INDEXEDSTACK INSTEAD OF DIRECTLY INDEXING THE LIST
+        // This is the key change for preserving state across tabs.
+        child: IndexedStack(index: _selectedIndex, children: _pages),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
