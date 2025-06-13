@@ -78,7 +78,7 @@ class _AddDeviceDialogState extends ConsumerState<AddDeviceDialog> {
         ElevatedButton(
           onPressed: _submit,
           style: ElevatedButton.styleFrom(
-            backgroundColor: DesignSystem.backgroundLighter,
+            backgroundColor: DesignSystem.primaryColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(DesignSystem.radiusMedium),
             ),
@@ -94,7 +94,7 @@ class _AddDeviceDialogState extends ConsumerState<AddDeviceDialog> {
       hintText: hintText,
       hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
       filled: true,
-      fillColor: DesignSystem.backgroundLight.withOpacity(0.3),
+      fillColor: DesignSystem.backgroundLighter.withOpacity(0.3),
       contentPadding: const EdgeInsets.symmetric(
         horizontal: DesignSystem.spacing20,
         vertical: DesignSystem.spacing16,
@@ -103,6 +103,7 @@ class _AddDeviceDialogState extends ConsumerState<AddDeviceDialog> {
         borderRadius: BorderRadius.circular(DesignSystem.radiusMedium),
         borderSide: BorderSide.none,
       ),
+
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(DesignSystem.radiusMedium),
         borderSide: const BorderSide(
