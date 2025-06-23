@@ -79,7 +79,7 @@ class HomeStatsWidget extends ConsumerWidget {
   }
 
   Color _getPowerUsageColor(double power) {
-    if (power > 3.0) {
+    if (power > 3.0) {    
       return DesignSystem.errorColor; // High usage
     } else if (power > 1.5) {
       return DesignSystem.warning; // Moderate usage

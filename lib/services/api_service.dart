@@ -19,6 +19,9 @@ class ApiService {
   Future<List<SmartDevice>> getDevices() async {
     try {
       final response = await _dio.get('/devices');
+      // print('response: $response');
+    
+
       final List<dynamic> records = response.data['records'] ?? [];
       return records.map((json) => SmartDevice.fromJson(json)).toList();
     } catch (e) {
