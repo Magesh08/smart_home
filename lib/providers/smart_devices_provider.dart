@@ -1,6 +1,6 @@
 // lib/providers/smart_devices_provider.dart
 
-import 'package:dio/dio.dart';
+// import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/smart_device_model.dart';
 import '../services/api_service.dart';
