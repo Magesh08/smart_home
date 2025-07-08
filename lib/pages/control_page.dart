@@ -61,7 +61,9 @@ class ControlPage extends ConsumerWidget {
     SmartDevicesState state,
   ) {
     if (state.isLoading && state.devices.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(
+        child: CircularProgressIndicator(color: DesignSystem.primaryColor),
+      );
     }
 
     if (state.errorMessage != null) {

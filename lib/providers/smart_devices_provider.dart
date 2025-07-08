@@ -1,5 +1,6 @@
 // lib/providers/smart_devices_provider.dart
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/smart_device_model.dart';
 import '../services/api_service.dart';
@@ -46,7 +47,10 @@ class SmartDevicesNotifier extends StateNotifier<SmartDevicesState> {
       final devices = await _apiService.getDevices();
       state = state.copyWith(devices: devices, isLoading: false);
     } catch (e) {
-      state = state.copyWith(errorMessage: e.toString(), isLoading: false);
+      state = state.copyWith(
+        errorMessage: 'Server is currently overloaded. Please try again later.',
+        isLoading: false,
+      );
     }
   }
 
