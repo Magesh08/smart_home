@@ -11,7 +11,11 @@ class ApiService {
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: 'https://smart-home-jblf.onrender.com/smart_home',
-      headers: {'accept': '*/*', 'Content-Type': 'application/json'},
+      headers: {
+        'accept': '*/*',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 23601c5e54722bdbe9ea49a0ffdbc252', // <-- Add this line
+      },
     ),
   );
 
